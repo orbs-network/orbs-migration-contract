@@ -2,7 +2,6 @@ import "dotenv/config";
 import {HardhatUserConfig} from "hardhat/config";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
-// import "hardhat-tracer";
 import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-etherscan";
 import {hardhatDefaultConfig} from "@defi.org/web3-candies/dist/hardhat";
