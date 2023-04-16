@@ -1,0 +1,30 @@
+{
+  "name": "@orbs-network/orbs-migration-contract",
+  "version": "1.0.0",
+  "repository": "https://github.com/orbs-network/orbs-migration-contract",
+  "author": "Orbs",
+  "license": "MIT",
+  "dependencies": {
+    "@defi.org/web3-candies": "4.x"
+  },
+  "main": "_dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "_dist",
+    "LICENSE",
+    "TOS.md",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rm -rf artifacts cache typechain-hardhat _dist",
+    "prettier": "prettier --write '{test,src,contracts}/**/*.{ts,js,json,sol}'",
+    "typechain": "npm run clean && hardhat typechain",
+    "prebuild": "npm run prettier && npm run typechain",
+    "build": "hardhat compile && solhint 'contracts/**/*.sol'",
+    "prepublishOnly": "npm run build",
+    "test": "NETWORK=ETH BLOCK=17057789 hardhat test"
+  },
+  "prettier": {
+    "printWidth": 120
+  }
+}
