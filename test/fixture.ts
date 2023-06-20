@@ -9,9 +9,12 @@ export let dest: string;
 export let deployer: string;
 export const orbsToken = "0xff56Cc6b1E6dEd347aA0B7676C85AB0B3D08B0FA";
 export const cooldownDays = "14";
+export const stakingContractAddress = "0x01D59Af68E2dcb44e04C50e05F62E7043F2656C3";
 
 export let migrationContract: StakingMigrationContract;
+export let migrationContract2: StakingMigrationContract;
 export let migrationContractAddress;
+export let migrationContractAddress2;
 
 export async function initFixture(blockNumber?: number | "latest") {
   await resetNetworkFork(blockNumber);
@@ -21,10 +24,20 @@ export async function initFixture(blockNumber?: number | "latest") {
     orbsToken,
     OrbsWhale,
     dest,
+    stakingContractAddress,
     cooldownDays,
   ]);
 
+  migrationContract2 = await deployArtifact<StakingMigrationContract>("StakingMigrationContract", { from: deployer }, [
+    orbsToken,
+    OrbsWhale,
+    dest,
+    stakingContractAddress,
+    1,
+  ]);
+
   migrationContractAddress = migrationContract.options.address;
+  migrationContractAddress2 = migrationContract2.options.address;
 }
 
 async function initAccounts() {

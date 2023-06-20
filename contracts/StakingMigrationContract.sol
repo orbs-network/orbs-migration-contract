@@ -16,8 +16,10 @@ contract StakingMigrationContract is IMigratableStakingContract {
 
     address public stakeOwner;
     address public destAddress;
-    uint8 public cooldownDays;
+    address public stakingContractAddress;
     uint256 public cooldownExpiry;
+
+    event TokensRecovered(address indexed stakeOwner, address destAddress, uint256 amount);
 
     /// @dev Initializes the migration contract.
     /// @param _stakeOwner address The original address which staked the tokens
@@ -26,27 +28,33 @@ contract StakingMigrationContract is IMigratableStakingContract {
     /// @param _cooldownDays uint8 The period (in days) between a stake owner's request to stop staking and being
     /// able to withdraw them.
     /// @param _token IERC20 The address of the ORBS token.
-    constructor(IERC20 _token, address _stakeOwner, address _destAddress, uint8 _cooldownDays) {
-        require(address(_token) != address(0), "null address");
-        require(address(_stakeOwner) != address(0), "null address");
-        require(address(_destAddress) != address(0), "null address");
+    constructor(
+        IERC20 _token,
+        address _stakeOwner,
+        address _destAddress,
+        address _stakingContractAddress,
+        uint8 _cooldownDays
+    ) {
+        require(address(_token) != address(0), "null address token");
+        require(address(_stakeOwner) != address(0), "null address stakeOwner");
+        require(address(_destAddress) != address(0), "null address destAddress");
         token = _token;
         stakeOwner = _stakeOwner;
         destAddress = _destAddress;
-        cooldownDays = _cooldownDays;
+        stakingContractAddress = _stakingContractAddress;
+        // set cooldown
+        cooldownExpiry = block.timestamp + (_cooldownDays * 1 days);
     }
 
     /// @dev Migrates ORBS tokens on behalf of msg.sender.
     /// @param _stakeOwner address The specified stake owner.
     /// @param _amount uint256 The amount of tokens to migrate.
     function acceptMigration(address _stakeOwner, uint256 _amount) external override {
+        require(msg.sender == stakingContractAddress, "Unauthorized caller");
         require(_amount > 0, "Amount is 0");
         require(_stakeOwner == stakeOwner, "Stake owner is not allowed");
 
         token.safeTransferFrom(msg.sender, address(this), _amount);
-
-        // set cooldown
-        cooldownExpiry = block.timestamp + (cooldownDays * 1 days);
 
         emit AcceptedMigration(_stakeOwner, _amount, token.balanceOf(address(this)));
     }
@@ -54,10 +62,12 @@ contract StakingMigrationContract is IMigratableStakingContract {
     /// @dev Sends the migrated tokens to staker's destination address.
     /// Anyone can call this function. It will only send the tokens if cooldown has finished.
     function recoverTokens() public {
-        uint256 orbsBalance = token.balanceOf(address(this));
-        require(orbsBalance > 0, "No tokens to recover");
+        uint256 tokensBalance = token.balanceOf(address(this));
+        require(tokensBalance > 0, "No tokens to recover");
         require(block.timestamp > cooldownExpiry, "Cooldown");
-        token.safeTransfer(destAddress, orbsBalance);
+        token.safeTransfer(destAddress, tokensBalance);
+
+        emit TokensRecovered(stakeOwner, destAddress, tokensBalance);
     }
 
     /// @dev Returns the address of the underlying staked token.

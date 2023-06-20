@@ -23,12 +23,15 @@ You need to create a `.env` file, with a `NETWORK_URL_ETH` entry inside (Ethereu
 
 You can customize the Hardhat configuration in the `hardhat.config.js` file.
 
+### Deployment
+Deploy the contract, passing the ORBS token address, the source address, the destination address, and the cooldown period (in days) as constructor arguments.
+
+Using the migrationManager wallet, add the newly deployed contrat (`addMigrationDestination`) .
 
 ### Usage
-
 This contract allows users to migrate their staked ORBS tokens from one address to another. The steps to use this contract are as follows:
 
-1. Deploy the contract, passing the ORBS token address, the source address, the destination address, and the cooldown period (in days) as constructor arguments.
+1. Recommended: go to https://staking.orbs.network, Unstake your tokens and Claim pending rewards.
 2. Call the `migrateStakedTokens` function in the [original staking contract](https://etherscan.io/address/0x01D59Af68E2dcb44e04C50e05F62E7043F2656C3), passing the stake owner address and the amount of tokens to be migrated. This function will transfer the tokens to the contract and start the cooldown period.
 3. Wait for the cooldown period to finish.
 4. Call the `recoverTokens` function to transfer the migrated tokens to the destination address.
