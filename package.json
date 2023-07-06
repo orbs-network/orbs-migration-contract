@@ -22,7 +22,8 @@
     "prebuild": "npm run prettier && npm run typechain",
     "build": "hardhat compile && solhint 'contracts/**/*.sol'",
     "prepublishOnly": "npm run build",
-    "test": "NETWORK=ETH BLOCK=13008864 hardhat test"
+    "test": "NETWORK=ETH BLOCK=13008864 hardhat test",
+    "test:poly": "NETWORK=POLY BLOCK=44749800 hardhat test"
   },
   "prettier": {
     "printWidth": 120

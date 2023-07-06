@@ -3,12 +3,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./IMigratableStakingContract.sol";
 
 /// @title Orbs staking migration smart contract.
 contract StakingMigrationContract is IMigratableStakingContract {
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     // The address of the ORBS token.
@@ -61,7 +59,7 @@ contract StakingMigrationContract is IMigratableStakingContract {
 
     /// @dev Sends the migrated tokens to staker's destination address.
     /// Anyone can call this function. It will only send the tokens if cooldown has finished.
-    function recoverTokens() public {
+    function recoverTokens() external {
         uint256 tokensBalance = token.balanceOf(address(this));
         require(tokensBalance > 0, "No tokens to recover");
         require(block.timestamp > cooldownExpiry, "Cooldown");
