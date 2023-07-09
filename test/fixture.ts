@@ -6,9 +6,9 @@ import {
   tag,
   useChaiBigNumber,
 } from "@defi.org/web3-candies/dist/hardhat";
-import {account, contract, chainId, networks} from "@defi.org/web3-candies";
-import type {StakingMigrationContract} from "../typechain-hardhat/contracts";
-import {orbsTokenAbi, stakingContractAbi, stakingRewardsAbi} from "./abis";
+import { account, contract, chainId, networks } from "@defi.org/web3-candies";
+import type { StakingMigrationContract } from "../typechain-hardhat/contracts";
+import { orbsTokenAbi, stakingContractAbi, stakingRewardsAbi } from "./abis";
 
 useChaiBigNumber();
 

@@ -2,20 +2,20 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "./IMigratableStakingContract.sol";
+import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IMigratableStakingContract} from "./IMigratableStakingContract.sol";
 
 /// @title Orbs staking migration smart contract.
 contract StakingMigrationContract is IMigratableStakingContract {
     using SafeERC20 for IERC20;
 
     // The address of the ORBS token.
-    IERC20 public token;
+    IERC20 public immutable token;
 
-    address public stakeOwner;
-    address public destAddress;
-    address public stakingContractAddress;
-    uint256 public cooldownExpiry;
+    address public immutable stakeOwner;
+    address public immutable destAddress;
+    address public immutable stakingContractAddress;
+    uint256 public immutable cooldownExpiry;
 
     event TokensRecovered(address indexed stakeOwner, address destAddress, uint256 amount);
 
@@ -34,8 +34,8 @@ contract StakingMigrationContract is IMigratableStakingContract {
         uint8 _cooldownDays
     ) {
         require(address(_token) != address(0), "null address token");
-        require(address(_stakeOwner) != address(0), "null address stakeOwner");
-        require(address(_destAddress) != address(0), "null address destAddress");
+        require(_stakeOwner != address(0), "null address stakeOwner");
+        require(_destAddress != address(0), "null address destAddress");
         token = _token;
         stakeOwner = _stakeOwner;
         destAddress = _destAddress;

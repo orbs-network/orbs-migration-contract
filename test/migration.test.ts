@@ -15,9 +15,9 @@ import {
   stakingRewardsContract,
 } from "./fixture";
 import BN from "bignumber.js";
-import {maxUint256, parseEvents} from "@defi.org/web3-candies";
-import {expect} from "chai";
-import {expectRevert, impersonate, mineBlock, setBalance} from "@defi.org/web3-candies/dist/hardhat";
+import { maxUint256, parseEvents } from "@defi.org/web3-candies";
+import { expect } from "chai";
+import { expectRevert, impersonate, mineBlock, setBalance } from "@defi.org/web3-candies/dist/hardhat";
 
 describe("StakingMigrationContract", async () => {
   beforeEach(() => initFixture());
@@ -133,9 +133,11 @@ describe("StakingMigrationContract", async () => {
     await stakingContract.methods.unstake(originalStakeBalance).send({ from: OrbsWhale });
     expect(await stakingContract.methods.getStakeBalanceOf(OrbsWhale).call()).bignumber.zero;
     await expectRevert(
-        async () =>
-            await stakingContract.methods.migrateStakedTokens(migrationContractAddress, originalStakeBalance).send({ from: OrbsWhale }),
-        /no staked tokens/
+      async () =>
+        await stakingContract.methods
+          .migrateStakedTokens(migrationContractAddress, originalStakeBalance)
+          .send({ from: OrbsWhale }),
+      /no staked tokens/
     );
     expect(await orbsTokenContract.methods.balanceOf(migrationContractAddress).call()).bignumber.zero;
   });
